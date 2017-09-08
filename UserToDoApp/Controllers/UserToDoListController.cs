@@ -110,7 +110,7 @@ namespace UserToDoApp.Controllers
                         var data = curData.FirstOrDefault();
                         curOrder = curOrder - 1;
                         data.utd_order = curOrder;
-                        et.UserToDoLists.Add(data);
+                        et.Entry(data).State = System.Data.Entity.EntityState.Modified;
                         et.SaveChanges();
                     }
                     var prevData = et.UserToDoLists.Where(x => x.utd_id == prevId);
@@ -119,7 +119,7 @@ namespace UserToDoApp.Controllers
                         var data = prevData.FirstOrDefault();
                         prevOrder = prevOrder + 1;
                         data.utd_order = prevOrder;
-                        et.UserToDoLists.Add(data);
+                        et.Entry(data).State = System.Data.Entity.EntityState.Modified;
                         et.SaveChanges();
                     }
                     return Json(new { key = true, message = "Success", }, JsonRequestBehavior.AllowGet);
@@ -152,18 +152,20 @@ namespace UserToDoApp.Controllers
                     if (curData != null)
                     {
                         var data = curData.FirstOrDefault();
-                        curOrder = curOrder - 1;
+                        curOrder = curOrder + 1;
                         data.utd_order = curOrder;
-                        et.UserToDoLists.Add(data);
+                        et.Entry(data).State = System.Data.Entity.EntityState.Modified;
                         et.SaveChanges();
+                        //et.UserToDoLists.Add(data);
+                        //et.SaveChanges();
                     }
                     var prevData = et.UserToDoLists.Where(x => x.utd_id == nextId);
                     if (prevData != null)
                     {
                         var data = prevData.FirstOrDefault();
-                        nextOrder = nextOrder + 1;
+                        nextOrder = nextOrder - 1;
                         data.utd_order = nextOrder;
-                        et.UserToDoLists.Add(data);
+                        et.Entry(data).State = System.Data.Entity.EntityState.Modified;
                         et.SaveChanges();
                     }
                     return Json(new { key = true, message = "Success", }, JsonRequestBehavior.AllowGet);

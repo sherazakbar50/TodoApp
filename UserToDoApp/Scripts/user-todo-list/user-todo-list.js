@@ -7,13 +7,12 @@
 
     //Adding new ToDo in List
     var handleAddToList = function () {
-        debugger;
         var todoTitle = $('#txt_todo_title').val();
         var todoPriority = $('#todo_priority_list').find('option:selected').text();
         var todoDate = $('#todo_date').val();
         var order = 1;
         if ($('#toDoList li').length > 0) {
-            var lbl_order = $('#toDoList li:last > div').find('#lbl_order').text();
+            var lbl_order = $('#toDoList li:last > div').find('.lbl_order').text();
             order = parseInt(lbl_order) + 1;
         }
         var todoListVm = {
@@ -29,7 +28,6 @@
             data: { vm: todoListVm },
             dataType: 'Json',
             success: function (response) {
-                debugger;
                 if (response.key == false) {
                     alert('Error');
                 }
@@ -54,7 +52,6 @@
             type: "Get",
             dataType: 'Json',
             success: function (response) {
-                debugger;
                 if (response.key == false) {
                     alert('Error');
                 }
@@ -90,60 +87,68 @@
     var handleToDoListItemUpAndDown = function () {
         //Moving ToDo up while clicking on up arrow
         $(document).on('click', '.move_up', function () {
-            var curliOrder = $(this).closest('li').find('.lbl_order').text();
-            var curliId = $(this).closest('li').attr('value');
-            var prevliOrder = $(this).closest('li').prev().find('.lbl_order').text();
-            var prevliId = $(this).closest('li').prev().attr('value');
-            $.ajax({
-                url: '/UserToDoList/UpdateRowsOrderOnUpKey',
-                type: "POST",
-                data: { curId: curliId, curOrder: curliOrder, prevId: prevliId, prevOrder: prevliOrder },
-                dataType: 'Json',
-                success: function (response) {
-                    debugger;
-                    if (response.key == false) {
-                        alert('Error');
+            var liOrder = $(this).closest('li').find('.lbl_order').text();
+            liOrder = parseInt(liOrder);
+            if (liOrder > 1)
+            {
+                var curliOrder = $(this).closest('li').find('.lbl_order').text();
+                var curliId = $(this).closest('li').attr('value');
+                var prevliOrder = $(this).closest('li').prev().find('.lbl_order').text();
+                var prevliId = $(this).closest('li').prev().attr('value');
+                $.ajax({
+                    url: '/UserToDoList/UpdateRowsOrderOnUpKey',
+                    type: "POST",
+                    data: { curId: curliId, curOrder: curliOrder, prevId: prevliId, prevOrder: prevliOrder },
+                    dataType: 'Json',
+                    success: function (response) {
+                        if (response.key == false) {
+                            alert('Error');
+                        }
+                        else {
+                            handleGetUserToDoList();
+                        }
+                    },
+                    complete: function () {
+                    },
+                    faiure: function () {
                     }
-                    else {
-                        handleGetUserToDoList();
-                    }
-                },
-                complete: function () {
-                },
-                faiure: function () {
-                }
-            });
+                });
+            }
         });
         //Moving ToDo down while clicking on down arrow
         $(document).on('click', '.move_down', function () {
-            var curliOrder = $(this).closest('li').find('.lbl_order').text();
-            var curliId = $(this).closest('li').attr('value');
-            var nextliOrder = $(this).closest('li').next().find('.lbl_order').text();
-            var nextliId = $(this).closest('li').next().attr('value');
-            $.ajax({
-                url: '/UserToDoList/UpdateRowsOrderOnDownKey',
-                type: "POST",
-                data: { curId: curliId, curOrder: curliOrder, nextId: nextliId, nextOrder: nextliOrder },
-                dataType: 'Json',
-                success: function (response) {
-                    if (response.key == false) {
-                        alert('Error');
+            var liLastOrder = $('#toDoList li:last > div').find('.lbl_order').text();
+            var liOrder = $(this).closest('li').find('.lbl_order').text();
+            if (liLastOrder !== liOrder)
+            {
+                var curliOrder = $(this).closest('li').find('.lbl_order').text();
+                var curliId = $(this).closest('li').attr('value');
+                var nextliOrder = $(this).closest('li').next().find('.lbl_order').text();
+                var nextliId = $(this).closest('li').next().attr('value');
+                $.ajax({
+                    url: '/UserToDoList/UpdateRowsOrderOnDownKey',
+                    type: "POST",
+                    data: { curId: curliId, curOrder: curliOrder, nextId: nextliId, nextOrder: nextliOrder },
+                    dataType: 'Json',
+                    success: function (response) {
+                        if (response.key == false) {
+                            alert('Error');
+                        }
+                        else {
+                            handleGetUserToDoList();
+                        }
+                    },
+                    complete: function () {
+                    },
+                    faiure: function () {
                     }
-                    else {
-                        handleGetUserToDoList();
-                    }
-                },
-                complete: function () {
-                },
-                faiure: function () {
-                }
-            });
+                });
+            }
         });
     };
 
     //Deleting ToDo from List
     var handleRemoveFromList = function (el) {
-        debugger;
         var id = $(el).closest('li').attr('value');
         $.ajax({
             url: '/UserToDoList/DeleteToDoFromList',
@@ -151,7 +156,6 @@
             data: { id: id },
             dataType: 'Json',
             success: function (response) {
-                debugger;
                 if (response.key == false) {
                     alert('Error');
                 }
