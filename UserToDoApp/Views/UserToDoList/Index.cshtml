@@ -1,0 +1,93 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+<link href="~/assests/plugins/bootstrap-datepicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.css">
+<link href="~/Content/user-todo-list/user-todo-list.css" rel="stylesheet" />
+<div class="row">
+    <div id="olContainer" class="container col-md-12">
+        <div class="col-md-12">
+            <h2>To Dos</h2>
+        </div>
+        <div class="col-md-12">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="control-label">Title</label>
+                    <input id="txt_todo_title" type="text" class="form-control" />
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label class="control-label">Priority</label>
+                    <select id="todo_priority_list" class="form-control">
+                        <option value="-1">Select</option>
+                        <option value="1">High</option>
+                        <option value="2">Medium</option>
+                        <option value="3">Low</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label class="control-label">Date</label>
+                    <div class="input-group">
+                        <input id="todo_date" type="text" class="form-control">
+                        <div class="input-group-addon">
+                            <span class="glyphicon glyphicon-th"></span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-md-1">
+                <div class="form-group">
+                    <label class="control-label">&nbsp; &nbsp;</label>
+                    <button id="btnAddToDoList" class="btn btn-default" onclick="ToDoList.addToList();" value="Add to List">
+                        Add
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="main_ol_div" class="col-md-12">
+            <ul id="toDoList">
+                <li value="0">
+                    <div class="form-group col-md-12">
+                        <div class="col-md-1"><label class="lbl_order pull-left">1</label></div>
+                        <div class="col-md-3"><label class="lbl_title pull-left">hello</label></div>
+                        <div class="col-md-3"><label class="pull-right">06-02-2017</label></div>
+                        <div class="col-md-3"><span class="badge pull-right">High</span></div>
+                        <div class="col-md-2">
+                            <span class="pull-right">
+                                <i class="fa fa-angle-double-down fa-6 move_down" aria-hidden="true" style="font-size: 18px;"></i>&nbsp;&nbsp;
+                                <i class="fa fa-angle-double-up fa-6 move_up" aria-hidden="true" style="font-size: 18px;"></i>&nbsp;&nbsp;
+                                <i onclick="ToDoList.removefromlist(this);" class="fa fa-remove fa-6" aria-hidden="true" style="font-size: 18px;"></i>
+                            </span>
+                        </div>
+                    </div>
+                </li>
+                <li value="0">
+                    <div class="form-group col-md-12">
+                        <div class="col-md-1"><label class="lbl_order pull-left">2</label></div>
+                        <div class="col-md-3"><label class="lbl_title pull-left">hello world</label></div>
+                        <div class="col-md-3"><label class="pull-right">06-02-2017</label></div>
+                        <div class="col-md-3"><span class="badge pull-right">Medium</span></div>
+                        <div class="col-md-2">
+                            <span class="pull-right">
+                                <i class="fa fa-angle-double-down fa-6 move_down" aria-hidden="true" style="font-size: 18px;"></i>&nbsp;&nbsp;
+                                <i class="fa fa-angle-double-up fa-6 move_up" aria-hidden="true" style="font-size: 18px;"></i>&nbsp;&nbsp;
+                                <i onclick="ToDoList.removefromlist(this);" class="fa fa-remove fa-6" aria-hidden="true" style="font-size: 18px;"></i>
+                            </span>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+@Scripts.Render("~/bundles/jquery")
+@*<script src="https://code.jquery.com/ui/1.11.4/jquery-ui.js"></script>*@
+@Scripts.Render("~/bundles/bootstrap")
+@*<script src="~/assests/plugins/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>*@
+<script src="~/Scripts/user-todo-list/user-todo-list.js"></script>
