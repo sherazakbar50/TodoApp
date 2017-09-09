@@ -62,24 +62,24 @@ namespace UserToDoApp.Controllers
                 var userId = User.Identity.GetUserId();
                 using (UserToDoAppDBEntities et = new UserToDoAppDBEntities())
                 {
-                var data = et.UserToDoLists
-               .Where(x => x.utd_created_by == userId)
-                            .Select(x => new UserToDoListVm
-                            {
-                                utd_id = x.utd_id,
-                                utd_order = x.utd_order,
-                                utd_title = x.utd_title,
-                                utd_priority = x.utd_priority,
-                                utd_date = x.utd_date
-                            }).OrderBy(x => x.utd_order).ToList()
-                            .Select(x => new UserToDoListVm
-                            {
-                                utd_id = x.utd_id,
-                                utd_order = x.utd_order,
-                                utd_title = x.utd_title,
-                                utd_priority = x.utd_priority,
-                                date = (x.utd_date.HasValue) ? x.utd_date.Value.ToString("yyyy-MM-dd") : null
-                            });
+                    var data = et.UserToDoLists
+                   .Where(x => x.utd_created_by == userId)
+                                .Select(x => new UserToDoListVm
+                                {
+                                    utd_id = x.utd_id,
+                                    utd_order = x.utd_order,
+                                    utd_title = x.utd_title,
+                                    utd_priority = x.utd_priority,
+                                    utd_date = x.utd_date
+                                }).OrderBy(x => x.utd_order).ToList()
+                                .Select(x => new UserToDoListVm
+                                {
+                                    utd_id = x.utd_id,
+                                    utd_order = x.utd_order,
+                                    utd_title = x.utd_title,
+                                    utd_priority = x.utd_priority,
+                                    date = (x.utd_date.HasValue) ? x.utd_date.Value.ToString("yyyy-MM-dd") : null
+                                });
                     return Json(new { key = true, message = "Success", data }, JsonRequestBehavior.AllowGet);
                 }
             }
@@ -89,14 +89,14 @@ namespace UserToDoApp.Controllers
             }
         }
 
-       /// <summary>
-       /// update rows order while clicking on arrow up
-       /// </summary>
-       /// <param name="curId"></param>
-       /// <param name="curOrder"></param>
-       /// <param name="prevId"></param>
-       /// <param name="prevOrder"></param>
-       /// <returns></returns>
+        /// <summary>
+        /// update rows order while clicking on arrow up
+        /// </summary>
+        /// <param name="curId"></param>
+        /// <param name="curOrder"></param>
+        /// <param name="prevId"></param>
+        /// <param name="prevOrder"></param>
+        /// <returns></returns>
         [HttpPost]
         public JsonResult UpdateRowsOrderOnUpKey(int curId, int curOrder, int prevId, int prevOrder)
         {
@@ -104,7 +104,7 @@ namespace UserToDoApp.Controllers
             {
                 using (UserToDoAppDBEntities et = new UserToDoAppDBEntities())
                 {
-                    var curData = et.UserToDoLists.Where(x=>x.utd_id == curId);
+                    var curData = et.UserToDoLists.Where(x => x.utd_id == curId);
                     if (curData != null)
                     {
                         var data = curData.FirstOrDefault();
@@ -156,8 +156,6 @@ namespace UserToDoApp.Controllers
                         data.utd_order = curOrder;
                         et.Entry(data).State = System.Data.Entity.EntityState.Modified;
                         et.SaveChanges();
-                        //et.UserToDoLists.Add(data);
-                        //et.SaveChanges();
                     }
                     var prevData = et.UserToDoLists.Where(x => x.utd_id == nextId);
                     if (prevData != null)
@@ -188,6 +186,7 @@ namespace UserToDoApp.Controllers
         {
             try
             {
+                var userId = User.Identity.GetUserId();
                 using (UserToDoAppDBEntities et = new UserToDoAppDBEntities())
                 {
                     var data = et.UserToDoLists.FirstOrDefault(c => c.utd_id == id);
@@ -196,6 +195,19 @@ namespace UserToDoApp.Controllers
                         et.UserToDoLists.Remove(data);
                         et.SaveChanges();
                     }
+                    var userToDos = et.UserToDoLists.Where(x => x.utd_created_by == userId);
+                    if (userToDos != null)
+                    {
+                        var userToDoIds = userToDos.OrderBy(x => x.utd_order).Select(x => x.utd_id);
+                        var order = 1;
+                        foreach (var item in userToDoIds)
+                        {
+                            var toDo = et.UserToDoLists.Where(x => x.utd_id == item).FirstOrDefault();
+                            toDo.utd_order = order++;
+                            et.Entry(toDo).State = System.Data.Entity.EntityState.Modified;
+                        }
+                    }
+                    et.SaveChanges();
                 }
                 return Json(new { key = true, message = "Success", }, JsonRequestBehavior.AllowGet);
             }

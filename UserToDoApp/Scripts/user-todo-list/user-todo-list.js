@@ -68,7 +68,7 @@
                           + '  <span class="pull-right"> '
                              + ' <i class="fa fa-angle-double-down fa-6 move_down" aria-hidden="true" style="font-size: 18px;"></i>&nbsp;&nbsp; '
                               + '<i class="fa fa-angle-double-up fa-6 move_up" aria-hidden="true" style="font-size: 18px;"></i>&nbsp;&nbsp;'
-                              + '<i onclick="ToDoList.removefromlist(this);" class="fa fa-remove fa-6" aria-hidden="true" style="font-size: 18px;"></i> '
+                              + '<i class="fa fa-remove fa-6 remove" aria-hidden="true" style="font-size: 18px;"></i> '
                           + '  </span>'
                             + '</div> '
                          + '</div> '
@@ -149,24 +149,26 @@
 
     //Deleting ToDo from List
     var handleRemoveFromList = function (el) {
-        var id = $(el).closest('li').attr('value');
-        $.ajax({
-            url: '/UserToDoList/DeleteToDoFromList',
-            type: "POST",
-            data: { id: id },
-            dataType: 'Json',
-            success: function (response) {
-                if (response.key == false) {
-                    alert('Error');
+        $(document).on('click', '.remove', function () {
+            var id = $(this).closest('li').attr('value');
+            $.ajax({
+                url: '/UserToDoList/DeleteToDoFromList',
+                type: "POST",
+                data: { id: id },
+                dataType: 'Json',
+                success: function (response) {
+                    if (response.key == false) {
+                        alert('Error');
+                    }
+                    else {
+                        handleGetUserToDoList();
+                    }
+                },
+                complete: function () {
+                },
+                faiure: function () {
                 }
-                else {
-                    handleGetUserToDoList();
-                }
-            },
-            complete: function () {
-            },
-            faiure: function () {
-            }
+            });
         });
     };
 
@@ -185,6 +187,7 @@
             handleToDoListItemUpAndDown();
             handleGetUserToDoList();
             handleOnClickEvents();
+            handleRemoveFromList();
             //Initialize Datepicker
             $("#todo_date").datepicker({
                 dateFormat: "mm/dd/yy",
@@ -201,9 +204,6 @@
         },
         addToList: function () {
             handleAddToList();
-        },
-        removeFromList: function (el) {
-            handleRemoveFromList(el);
         },
         success: function (data, status, xhr, modalId) {
 
